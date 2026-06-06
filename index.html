@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CHS Schedule AI – โรงเรียนเฉลิมขวัญสตรี</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0a1628;
+      --navy-mid: #122040;
+      --navy-light: #1a3a6e;
+      --navy-border: #1e4080;
+      --accent: #2563eb;
+      --accent-light: #3b82f6;
+      --white: #ffffff;
+      --off-white: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-400: #94a3b8;
+      --gray-600: #475569;
+      --navy-glass: rgba(10,22,40,0.85);
+      --gold: #f5c542;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Sarabun', 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0a1628 0%, #122040 50%, #0f2a5e 100%);
+      min-height: 100vh;
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 20px 20px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+    }
+
+    .lang-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .lang-btn button {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.7);
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .lang-btn button.active,
+    .lang-btn button:hover {
+      background: var(--accent);
+      border-color: var(--accent-light);
+      color: white;
+    }
+
+    .logo-wrap {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: white;
+      padding: 4px;
+      box-shadow: 0 0 40px rgba(37,99,235,0.4), 0 8px 32px rgba(0,0,0,0.4);
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .logo-wrap img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    /* fallback school crest if image fails */
+    .logo-fallback {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1a3a6e, #0a1628);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+    }
+
+    header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 0.5px;
+      color: white;
+    }
+
+    header p.subtitle {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      margin-top: 4px;
+      text-align: center;
+    }
+
+    .time-display {
+      margin-top: 10px;
+      background: rgba(37,99,235,0.15);
+      border: 1px solid rgba(37,99,235,0.3);
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      color: #93c5fd;
+    }
+
+    /* ─── MAIN ─── */
+    main {
+      width: 100%;
+      max-width: 760px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 0 16px;
+    }
+
+    /* ─── CHAT ─── */
+    #chat-box {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 300px;
+      max-height: 55vh;
+    }
+
+    #chat-box::-webkit-scrollbar { width: 4px; }
+    #chat-box::-webkit-scrollbar-track { background: transparent; }
+    #chat-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+    .msg {
+      display: flex;
+      gap: 10px;
+      animation: fadeUp 0.3s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg.user { flex-direction: row-reverse; }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .avatar.ai-avatar {
+      background: linear-gradient(135deg, #1e40af, #2563eb);
+      box-shadow: 0 0 12px rgba(37,99,235,0.4);
+    }
+
+    .avatar.user-avatar {
+      background: linear-gradient(135deg, #374151, #1f2937);
+    }
+
+    .bubble {
+      max-width: 78%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .msg.ai .bubble {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-top-left-radius: 4px;
+    }
+
+    .msg.user .bubble {
+      background: linear-gradient(135deg, #1e40af, #1d4ed8);
+      border-top-right-radius: 4px;
+    }
+
+    /* result card */
+    .result-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-top: 10px;
+    }
+
+    .result-card .subject {
+      font-size: 20px;
+      font-weight: 700;
+      color: #93c5fd;
+      margin-bottom: 4px;
+    }
+
+    .result-card .detail {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 2px;
+    }
+
+    .result-card .detail span {
+      color: rgba(255,255,255,0.85);
+    }
+
+    .period-badge {
+      display: inline-block;
+      background: rgba(37,99,235,0.25);
+      border: 1px solid rgba(37,99,235,0.4);
+      color: #93c5fd;
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+
+    /* suggestions */
+    .suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .suggest-btn {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.8);
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .suggest-btn:hover {
+      background: rgba(37,99,235,0.25);
+      border-color: rgba(37,99,235,0.5);
+      color: white;
+    }
+
+    /* typing indicator */
+    .typing-dots {
+      display: flex;
+      gap: 5px;
+      padding: 4px 0;
+    }
+
+    .typing-dots span {
+      width: 8px; height: 8px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 50%;
+      animation: dot 1.2s infinite;
+    }
+
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes dot {
+      0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-6px); opacity: 1; }
+    }
+
+    /* ─── INPUT AREA ─── */
+    .input-area {
+      padding: 16px 0 28px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,0.07);
+      border: 1.5px solid rgba(255,255,255,0.14);
+      border-radius: 28px;
+      padding: 6px 8px 6px 20px;
+      gap: 8px;
+      transition: border-color 0.2s;
+    }
+
+    .input-wrap:focus-within {
+      border-color: rgba(37,99,235,0.6);
+      background: rgba(255,255,255,0.09);
+    }
+
+    #user-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: white;
+      font-size: 15px;
+      font-family: inherit;
+      padding: 6px 0;
+      resize: none;
+    }
+
+    #user-input::placeholder { color: rgba(255,255,255,0.35); }
+
+    #send-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e40af, #2563eb);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    #send-btn:hover { background: linear-gradient(135deg, #1d4ed8, #3b82f6); transform: scale(1.05); }
+    #send-btn:active { transform: scale(0.97); }
+
+    #send-btn svg { width: 18px; height: 18px; fill: white; }
+
+    .hint-text {
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+      margin-top: 10px;
+    }
+
+    /* ─── NO SCHOOL ─── */
+    .no-class-badge {
+      display: inline-block;
+      background: rgba(245,197,66,0.12);
+      border: 1px solid rgba(245,197,66,0.3);
+      color: #fcd34d;
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 520px) {
+      header h1 { font-size: 16px; }
+      .logo-wrap { width: 70px; height: 70px; }
+      .bubble { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="lang-btn">
+    <button id="btn-th" class="active" onclick="setLang('th')">🇹🇭 ไทย</button>
+    <button id="btn-en" onclick="setLang('en')">🇬🇧 EN</button>
+  </div>
+
+  <!-- Logo: using the uploaded school logo via inline base64 placeholder -->
+  <div class="logo-wrap">
+    <img id="school-logo" src="chslogo.png" alt="CHS Logo"
+         onerror="this.style.display='none';document.getElementById('logo-fb').style.display='flex';" />
+    <div id="logo-fb" class="logo-fallback" style="display:none;">🏫</div>
+  </div>
+
+  <h1 id="hdr-title">โรงเรียนเฉลิมขวัญสตรี จังหวัดพิษณุโลก</h1>
+  <p class="subtitle" id="hdr-sub">ระบบค้นหาตารางเรียน ชั้น ม.5 ภาคเรียนที่ 1/2569</p>
+  <div class="time-display" id="live-time">⏰ กำลังโหลดเวลา...</div>
+</header>
+
+<main>
+  <div id="chat-box"></div>
+
+  <div class="input-area">
+    <div class="input-wrap">
+      <input type="text" id="user-input"
+             placeholder="พิมพ์คำถาม เช่น 'ตอนนี้ ม.5/13 เรียนอะไร?'"
+             autocomplete="off" />
+      <button id="send-btn" onclick="handleSend()">
+        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      </button>
+    </div>
+    <p class="hint-text" id="hint-text">กด Enter หรือกดปุ่มส่งเพื่อค้นหา</p>
+  </div>
+</main>
+
+<script>
+// ══════════════════════════════════════════════════
+//  LANGUAGE
+// ══════════════════════════════════════════════════
+let lang = 'th';
+
+const T = {
+  th: {
+    hdrTitle: 'โรงเรียนเฉลิมขวัญสตรี จังหวัดพิษณุโลก',
+    hdrSub: 'ระบบค้นหาตารางเรียน ชั้น ม.5 ภาคเรียนที่ 1/2569',
+    placeholder: 'พิมพ์คำถาม เช่น "ตอนนี้ ม.5/13 เรียนอะไร?"',
+    hint: 'กด Enter หรือกดปุ่มส่งเพื่อค้นหา',
+    welcome: 'สวัสดี! 👋 ฉันคือ **CHS Schedule AI** ช่วยตรวจสอบตารางเรียนชั้น ม.5 ได้เลยครับ\n\nลองถามได้เช่น:',
+    suggests: ['ตอนนี้ ม.5/13 เรียนอะไร?', 'วันจันทร์คาบแรก ม.5/13 เรียนอะไร?', 'ม.5/5 วันศุกร์มีอะไรบ้าง?', 'วันพุธคาบ 3 ม.5/1 เรียนอะไร?'],
+    notFound: 'ขอโทษครับ ไม่พบข้อมูลที่ตรงกัน กรุณาระบุห้องเรียน เช่น "ม.5/1" หรือ "5.1"',
+    noClass: '🌙 ขณะนี้ยังไม่มีการเรียนการสอน (นอกเวลาเรียน)',
+    lunch: '🍽️ เวลาพักกลางวัน (12:10 – 13:00 น.)',
+    break5: '☕ เวลาพัก (11:20 – 12:10 น.)',
+    dayLabels: ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'],
+    now: 'ขณะนี้ในประเทศไทย',
+    period: 'คาบที่',
+    subject: 'วิชา',
+    teacher: 'ครูผู้สอน',
+    room: 'ห้องเรียน',
+    time: 'เวลา',
+    allDay: 'ตารางทั้งวัน',
+    noSchool: 'วันหยุด – ไม่มีการเรียนการสอน',
+    selfStudy: 'Self Study / ศึกษาด้วยตนเอง',
+    midBreak: 'พักกลางวัน',
+  },
+  en: {
+    hdrTitle: 'Chalermkwan Satri School, Phitsanulok',
+    hdrSub: 'Schedule AI – Grade 11 (M.5) Semester 1/2025',
+    placeholder: 'Ask e.g. "What is M.5/13 studying now?"',
+    hint: 'Press Enter or click send to search',
+    welcome: 'Hello! 👋 I\'m **CHS Schedule AI**. I can look up class schedules for Grade 11 (M.5).\n\nTry asking:',
+    suggests: ['What is M.5/13 studying now?', 'Monday period 1 – M.5/13?', "M.5/5 Friday full schedule?", 'Wednesday period 3 M.5/1?'],
+    notFound: 'Sorry, I couldn\'t find that. Please specify a class like "M.5/1" or "5.1".',
+    noClass: '🌙 No class right now (outside school hours)',
+    lunch: '🍽️ Lunch Break (12:10 – 13:00)',
+    break5: '☕ Short Break (11:20 – 12:10)',
+    dayLabels: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+    now: 'Current time in Thailand',
+    period: 'Period',
+    subject: 'Subject',
+    teacher: 'Teacher',
+    room: 'Room',
+    time: 'Time',
+    allDay: "Full Day Schedule",
+    noSchool: 'Holiday – No Classes',
+    selfStudy: 'Self Study',
+    midBreak: 'Lunch Break',
+  }
+};
+
+function t(key) { return T[lang][key] || key; }
+
+// ══════════════════════════════════════════════════
+//  SCHEDULE DATA  (all 14 classes, M.5/1–M.5/14)
+//  periods: index 0-7 = คาบ 1-8 (คาบ 5 = lunch break)
+//  days: 0=Sun,1=Mon,2=Tue,3=Wed,4=Thu,5=Fri,6=Sat
+// ══════════════════════════════════════════════════
+const PERIODS = [
+  { label: '1', start: '08:20', end: '09:20' },
+  { label: '2', start: '09:20', end: '10:20' },
+  { label: '3', start: '10:20', end: '11:20' },
+  { label: '4', start: '11:20', end: '12:10' },
+  { label: '5', start: '12:10', end: '13:00' }, // LUNCH
+  { label: '6', start: '13:00', end: '14:00' },
+  { label: '7', start: '14:00', end: '15:00' },
+  { label: '8', start: '15:00', end: '16:00' },
+  { label: '9', start: '16:00', end: '17:00' },
+];
+
+// Each class: schedule[day][period] = {subjectTH, subjectEN, teacher, room}
+// day: 1=Mon...5=Fri, period: 1-9
+// Using code-based subject names decoded from the PDF
+
+// Helper to build entry
+function e(sTH, sEN, teacher, room) {
+  return { subjectTH: sTH, subjectEN: sEN, teacher, room: room || '' };
+}
+
+const LUNCH  = () => e('พักกลางวัน', 'Lunch Break', '', '');
+const BREAK_ = () => e('พัก', 'Break', '', '');
+const SELF   = () => e('Self Study', 'Self Study', '', '');
+const NONE   = () => null;
+const MORNING= () => e('ปกครอง (โฮมรูม)', 'Homeroom', '', '');
+
+// ─── ม.5/1  ห้อง 1653 ───────────────────────────
+const s51 = {
+  1: { // จันทร์
+    1: e('ศิลปะ','Art','กฤษ','1121'),
+    2: e('การงานอาชีพ','Home Economics','จรัญ','1653'),
+    3: e('ชีวะวิทยา','Biology','ภัทรชมน','1653'),
+    4: e('คณิตศาสตร์','Math','นิภาพร','1653'),
+    5: LUNCH(),
+    6: e('ภาษาไทย','Thai','อรพรรณ','1653'),
+    7: e('ฟิสิกส์','Physics','วนิสา','1653'),
+    8: e('ฟิสิกส์','Physics','วนิสา','1653'),
+    9: NONE(),
+  },
+  2: { // อังคาร
+    1: e('ภาษาอังกฤษ','English','พัณณ์ชิตา','1653'),
+    2: e('กฎหมาย','Law','นัทธชัย','1653'),
+    3: e('สุขศึกษาและพละศึกษา','PE','กีรติกาญจน์','สนาม'),
+    4: e('แนะแนว','Guidance','ธิพัฒน์พิสิษฐ์','1653'),
+    5: LUNCH(),
+    6: e('คณิตศาสตร์','Math','สราวีวรรณ','1653'),
+    7: e('ภาษาอังกฤษ','English','นรัสถ์','1653'),
+    8: e('ภาษาอังกฤษ','English','นรัสถ์','1653'),
+    9: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','กติกา','1653'),
+  },
+  3: { // พุธ
+    1: e('ชีวะวิทยา','Biology','ภัทรชมน','313'),
+    2: e('ชีวะวิทยา','Biology','ภัทรชมน','313'),
+    3: e('คณิตศาสตร์','Math','นิภาพร','1653'),
+    4: e('คณิตศาสตร์','Math','นิภาพร','1653'),
+    5: LUNCH(),
+    6: e('ประวัติศาสตร์','History','นิตยา','1653'),
+    7: e('วิทยาศาสตร์','Science','ชลาธร','1653'),
+    8: e('ภาษาอังกฤษ','English','May Japson','1653'),
+    9: NONE(),
+  },
+  4: { // พฤหัส
+    1: e('ปกครอง','Homeroom','พบหัวหน้าระดับ/ครูที่ปรึกษา/ชุมราชานุเคระห์/1653'),
+    2: e('คณิตศาสตร์','Math','สราวีวรรณ','1653'),
+    3: e('เคมี','Chemistry','ชลาธร','1653'),
+    4: e('เคมี','Chemistry','ชลาธร','1653'),
+    5: LUNCH(),
+    6: e('ภาษาอังกฤษ','English','พัณณ์ชิตา','1653'),
+    7: e('ภาษาอังกฤษ','English','Unice M.','1653'),
+    8: e('ภาษาอังกฤษ','English','Unice M.','1653'),
+    9: NONE(),
+  },
+  5: { // ศุกร์
+    1: e('ฟิสิกส์','Physics','วนิสา','1653'),
+    2: e('ฟิสิกส์','Physics','วนิสา','1653'),
+    3: e('ภาษาไทย','Thai','อรพรรณ','1653'),
+    4: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','กติกา','1653'),
+
+    5: LUNCH(),
+    6: e('ภาษาอังกฤษ','English','May Japson','1653'),
+    7: e('กฎหมาย','Law','นัทธชัย','1653'),
+    8: e('คณิตศาสตร์','Math','นิภาพร','1653'),
+    9: NONE(),
+  },
+};
+
+// ─── ม.5/2  ห้อง 1654 ───────────────────────────
+const s52 = {
+  1: {
+    1: e('การงานอาชีพ','Home Economics','จรัญ','1654'),
+    2: e('ภาษาอังกฤษ','English','พัณณ์ชิตา','1654'),
+    3: e('วิชาเลือก(จีน/ญี่ปุ่น/ฝรั่งเศษ)','Foreign Language Elective','T.Cai/T.Sawada/T.Solene','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    4: e('วิชาเลือก(จีน/ญี่ปุ่น/ฝรั่งเศษ)','Foreign Language Elective','T.Cai/T.Sawada/T.Solene','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    5: LUNCH(),
+    6: e('คณิตศาสตร์','Math','สุพิน','1654'),
+    7: e('ภาษาไทย','Thai','อรพรรณ','1654'),
+    8: e('ภาษาอังกฤษ','English','May Japson','1654'),
+    9: NONE(),
+  },
+  2: {
+    1: e('เคมี','Chemistry','ศิริกัญญา','1654'),
+    2: e('สุขศึกษาและพละศึกษา','PE','กีรติกาญจน์','สนาม'),
+    3: e('ภาษาอังกฤษ','English','อภิชัย','1654'),
+    4: e('ภาษาอังกฤษ','English','อภิชัย','1654'),
+    5: LUNCH(),
+    6: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','เดือนเพ็ญ','1654'),
+    7: e('วิชาเลือก(จีน/ญี่ปุ่น/ฝรั่งเศษ)','Foreign Language Elective','ครูอภิชนาฎ/ครูสุรีวัลย์/ครูรัตนา','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    8: e('วิชาเลือก(จีน/ญี่ปุ่น/ฝรั่งเศษ)','Foreign Language Elective','ครูอภิชนาฎ/ครูสุรีวัลย์/ครูรัตนา','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    9: NONE(),
+  },
+  3: {
+    1: e('ภาษาไทยวรรณกรรม','Thai Literature','อรทัย','1654'),
+    2: e('คณิตศาสตร์','Math','สุพิน','1654'),
+    3: e('ภาษาอังกฤษ','English','Unice M.','1654'),
+    4: e('กฎหมาย','Law','นัทธชัย','1654'),
+    5: LUNCH(),
+    6: e('ภาษาอังกฤษ','English','May Japson','1654'),
+    7: e('ประวัติศาสตร์','History','นิตยา','1654'),
+    8: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','1654'),
+    9: NONE(),
+  },
+  4: {
+    1: e('ปกครอง','Homeroom','พบหัวหน้าระดับ/ครูที่ปรึกษา','หอประชุมราชานุเคระห์/1654'),
+    2: e('ภาษาไทยวรรณกรรม','Thai Literature','อรทัย','1654'),
+    3: e('ภาษาอังกฤษ','English','พัณณ์ชิตา','1654'),
+    4: e('ศิลปะ','Art','กฤษ','1121'),
+    5: LUNCH(),
+    6: e('ภาษาอังกฤษ','English','Unice M.','1654'),
+    7: e('แนะแนว','Guidance','ธิพัฒน์พิสิษฐ์','1654'),
+    8: e('ชุมนุม','Club','','แล้วแต่ชุมนุม/Depends on club choice'),
+    9: NONE(),
+  },
+  5: {
+    1: e('วิชาเลือก(จีน/ญี่ปุ่น/ฝรั่งเศษ)','Foreign Language Elective','ครูอภิชนาฎ/ครูสุรีวัลย์/ครูรัตนา','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    2: e('วิชาเลือก(จีน/ญี่ปุ่น/ฝรั่งเศษ)','Foreign Language Elective','ครูอภิชนาฎ/ครูสุรีวัลย์/ครูรัตนา','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    3: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','เดือนเพ็ญ','1654'),
+    4: e('ภาษาไทย','Thai','อรพรรณ','1654'),
+    5: LUNCH(),
+    6: e('เคมี','Chemistry','ศิริกัญญา','324'),
+    7: e('เคมี','Chemistry','ศิริกัญญา','324'),
+    8: e('กฎหมาย','Law','นัทธชัย','1654'),
+    9: NONE(),
+  },
+};
+
+// ─── ม.5/3  ห้อง 331 ────────────────────────────
+const s53 = {
+  1: {
+    1: e('คณิตศาสตร์','Math','นิภาพร','331'),
+    2: e('สุขศึกษาและพละศึกษา','PE','กีรติกาญจน์','สนาม'),
+    3: e('ฟิสิกส์','Physics','วนิสา','331'),
+    4: e('ฟิสิกส์','Physics','วนิสา','331'),
+    5: LUNCH(),
+    6: e('ศิลปะ','Art','กฤษ','1121'),
+    7: e('คอมพิวเตอร์','Computer','นิธิกร','1432'),
+    8: e('คอมพิวเตอร์','Computer','นิธิกร','1432'),
+    9: NONE(),
+  },
+  2: {
+    1: e('เคมี','Chemistry','ชลาธร','315'),
+    2: e('เคมี','Chemistry','ชลาธร','315'),
+    3: e('ภูมิศาสตร์','Geography','นิษฐาพร','331'),
+    4: e('ภาษาอังกฤษ','English','วัฒนา','331'),
+    5: LUNCH(),
+    6: e('ภาษาไทยวรรณกรรม','Thai Literature','กัลยา','331'),
+    7: e('คณิตศาสตร์','Math','นิภาพร','331'),
+    8: e('ภาษาอังกฤษ','English','Ruth Leah','331'),
+    9: NONE(),
+  },
+  3: {
+    1: e('คณิตศาสตร์','Math','สราวีวรรณ','331'),
+    2: e('คณิตศาสตร์','Math','สราวีวรรณ','331'),
+    3: e('ภาษาไทยวรรณกรรม','Thai Literature','กัลยา','331'),
+    4: e('ภูมิศาสตร์','Geography','นิษฐาพร','331'),
+    5: LUNCH(),
+    6: e('ชีวภาพ','Biology','วรุณยุภา','313'),
+    7: e('วรุณยุภา','Thai','วรุณยุภา','313'),
+    8: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','331'),
+    9: NONE(),
+  },
+  4: {
+    1: e('ปกครอง','Homeroom','พบหัวหน้าระดับ/ครูที่ปรึกษา','หอประชุมราชานุเคระห์/331'),
+    2: e('ฟิสิกส์','Physics','วนิสา','331'),
+    3: e('ฟิสิกส์','Physics','วนิสา','331'),
+    4: e('คณิตศาสตร์','Math','สราวีวรรณ','331'),
+    5: LUNCH(),
+    6: NONE(),
+    7: NONE(),
+    8: e('ภาษาอังกฤษ','English','Ruth Leah','331'),
+    9: NONE(),
+  },
+  5: {
+    1: e('แนะแนว','Guidance','ธิพัฒน์พิสิษฐ์','331'),
+    2: e('ประวัติศาสตร์','History','นิตยา','331'),
+    3: e('ภาษาอังกฤษ','English','วัฒนา','331'),
+    4: e('คณิตศาสตร์','Math','สราวีวรรณ','331'),
+    5: LUNCH(),
+    6: e('เคมี','Chemistry','ชลาธร','331'),
+    7: e('วรุณยุภา','Thai','วรุณยุภา','331'),
+    8: e('คณิตศาสตร์','Math','สราวีวรรณ','331'),
+    9: NONE(),
+  },
+};
+
+// ─── ม.5/4  ห้อง 332 ────────────────────────────
+const s54 = {
+  1: {
+    1: e('สุขศึกษาและพละศึกษา','PE','กีรติกาญจน์','สนาม'),
+    2: e('คณิตศาสตร์','Math','นิภาพร','332'),
+    3: e('ภูมิศาสตร์','Geography','นิษฐาพร','332'),
+    4: e('ศิลปะ','Art','กฤษ','1121'),
+    5: LUNCH(),
+    6: e('คณิตศาสตร์','Math','สราวีวรรณ','332'),
+    7: e('ภาษาอังกฤษ','English','Ruth Leah','332'),
+    8: e('ภาษาไทยวรรณกรรม','Thai Literature','กัลยา','332'),
+    9: NONE(),
+  },
+  2: {
+    1: e('คอมพิวเตอร์','Computer','นิธิกร','1432'),
+    2: e('คอมพิวเตอร์','Computer','นิธิกร','1432'),
+    3: e('วรุณยุภา','Thai','วรุณยุภา','332'),
+    4: e('ภูมิศาสตร์','Geography','นิษฐาพร','332'),
+    5: LUNCH(),
+    6: e('วนิสา','Art','วนิสา','332'),
+    7: e('วนิสา','Art','วนิสา','332'),
+    8: e('นิภาพร','Social','นิภาพร','332'),
+    9: NONE(),
+  },
+  3: {
+    1: e('ฟิสิกส์','Physics','วนิสา','332'),
+    2: e('ฟิสิกส์','Physics','วนิสา','332'),
+    3: e('คณิตศาสตร์','Math','สราวีวรรณ','332'),
+    4: e('ภาษาไทยวรรณกรรม','Thai Literature','กัลยา','332'),
+    5: LUNCH(),
+    6: e('เคมี','Chemistry','ชลาธร','332'),
+    7: e('ภาษาอังกฤษ','English','วัฒนา','332'),
+    8: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','332'),
+    9: NONE(),
+  },
+  4: {
+    1: e('ปกครอง','Homeroom','พบหัวหน้าระดับ/ครูที่ปรึกษา','หอประชุมราชานุเคระห์/332'),
+    2: e('ภาษาอังกฤษ','English','วัฒนา','332'),
+    3: e('วรุณยุภา','Thai','วรุณยุภา','332'),
+    4: e('วรุณยุภา','Thai','วรุณยุภา','332'),
+    5: LUNCH(),
+    6: NONE(),
+    7: NONE(),
+    8: e('แนะแนว','Guidance','ธิพัฒน์พิสิษฐ์','332'),
+    9: NONE(),
+  },
+  5: {
+    1: e('เคมี','Chemistry','ชลาธร','315'),
+    2: e('เคมี','Chemistry','ชลาธร','315'),
+    3: e('ประวัติศาสตร์','History','นิตยา','332'),
+    4: e('คณิตศาสตร์','Math','วราพร','332'),
+    5: LUNCH(),
+    6: e('คณิตศาสตร์','Math','สราวีวรรณ','332'),
+    7: e('คณิตศาสตร์','Math','สราวีวรรณ','332'),
+    8: e('ภาษาอังกฤษ','English','Ruth Leah','332'),
+    9: NONE(),
+  },
+};
+
+// ─── ม.5/5  ห้อง 433 ────────────────────────────
+const s55 = {
+  1: {
+    1: e('คณิตศาสตร์','Math','วราพร','433'),
+    2: e('ภาษาอังกฤษ','English','เดือนเพ็ญ','433'),
+    3: e('ประวัติศาสตร์','History','นิตยา','433'),
+    4: e('ภาษาไทย','Thai','อรพรรณ','433'),
+    5: LUNCH(),
+    6: e('ภาษาอังกฤษ','English','พัณณ์ชิตา','433'),
+    7: e('วรุณยุภา','Thai','วรุณยุภา','433'),
+    8: e('เคมี','Chemistry','สุภารณ์','433'),
+    9: NONE(),
+  },
+  2: {
+    1: e('ฟิสิกส์','Physics','เนตรนภา','326'),
+    2: e('ฟิสิกส์','Physics','เนตรนภา','326'),
+    3: e('การงานอาชีพ','Home Economics','จรัญ','433'),
+    4: e('คณิตศาสตร์','Math','นิภาพร','433'),
+    5: LUNCH(),
+    6: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','433'),
+    7: e('กฎหมาย','Law','นัทธชัย','433'),
+    8: e('แนะแนว','Guidance','ธิพัฒน์พิสิษฐ์','433'),
+    9: NONE(),
+  },
+  3: {
+    1: e('กฎหมาย','Law','นัทธชัย','433'),
+    2: e('คณิตศาสตร์','Math','วราพร','433'),
+    3: e('ฟิสิกส์','Physics','เนตรนภา','433'),
+    4: e('ฟิสิกส์','Physics','เนตรนภา','433'),
+    5: LUNCH(),
+    6: e('คณิตศาสตร์','Math','นิภาพร','433'),
+    7: e('สุขศึกษาและพละศึกษา','PE','กีรติกาญจน์','สนาม'),
+    8: e('ภาษาอังกฤษ','English','Lenneth','433'),
+    9: NONE(),
+  },
+  4: {
+    1: e('ปกครอง','Homeroom','พบหัวหน้าระดับ/ครูที่ปรึกษา','หอประชุมราชานุเคระห์/332'),
+    2: e('ภาษาอังกฤษ','English','เดือนเพ็ญ','433'),
+    3: e('เคมี','Chemistry','สุภารณ์','315'),
+    4: e('เคมี','Chemistry','สุภารณ์','315'),
+    5: LUNCH(),
+    6: e('ชีวภาพ','Biology','วรุณยุภา','313'),
+    7: e('ชีวภาพ','Biology','วรุณยุภา','313'),
+    8: e('ชุมนุม','Club','','แล้วแต่ชุมนุม/Depends on club choice'),
+    9: NONE(),
+  },
+  5: {
+    1: e('ชีวภาพ','Biology','วรุณยุภา','433'),
+    2: e('ชีวภาพ','Biology','วรุณยุภา','433'),
+    3: e('ภาษาอังกฤษ','English','พัณณ์ชิตา','433'),
+    4: e('ศิลปะ','Art','กฤษ','1121'),
+    5: LUNCH(),
+    6: e('คณิตศาสตร์','Math','นิภาพร','433'),
+    7: e('คณิตศาสตร์','Math','นิภาพร','433'),
+    8: e('ภาษาไทย','Thai','อรพรรณ','433'),
+    9: NONE(),
+  },
+};
+
+// ─── ม.5/6  ห้อง 441 ────────────────────────────
+const s56 = {
+  1: {
+    1: e('ภาษาอังกฤษ','English','เดือนเพ็ญ','441'),
+    2: e('คณิตศาสตร์','Math','สราวีวรรณ','441'),
+    3: e('เคมี','Chemistry','สุภารณ์','315'),
+    4: e('เคมี','Chemistry','สุภารณ์','315'),
+    5: LUNCH(),
+    6: e('คณิตศาสตร์','Math','วราพร','441'),
+    7: e('คณิตศาสตร์','Math','วราพร','441'),
+    8: e('ชีวภาพ','Biology','วรุณยุภา','441'),
+    9: NONE(),
+  },
+  2: {
+    1: e('ชีวภาพ','Biology','วรุณยุภา','441'),
+    2: e('ชีวภาพ','Biology','วรุณยุภา','441'),
+    3: e('ประวัติศาสตร์','History','นิตยา','441'),
+    4: e('การงานอาชีพ','Home Economics','จรัญ','441'),
+    5: LUNCH(),
+    6: e('คณิตศาสตร์','Math','วราพร','441'),
+    7: e('ภาษาอังกฤษ','English','เดือนเพ็ญ','441'),
+    8: e('ภาษาอังกฤษ','English','Realyn','441'),
+    9: NONE(),
+  },
+  3: {
+    1: e('ภาษาไทยวรรณกรรม','Thai Literature','กัลยา','441'),
+    2: e('กฎหมา','Law','นัทธชัย','441'),
+    3: e('สุขศึกษาและพละศึกษา','PE','กีรติกาญจน์','สนาม'),
+    4: e('ภาษาอังกฤษ','English','วัฒนา','441'),
+    5: LUNCH(),
+    6: e('ฟิสิกส์','Physics','เนตรนภา','326'),
+    7: e('ฟิสิกส์','Physics','เนตรนภา','326'),
+    8: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','441'),
+    9: NONE(),
+  },
+  4: {
+    1: e('ปกครอง','Homeroom','พบหัวหน้าระดับ/ครูที่ปรึกษา','หอประชุมราชานุเคระห์/332'),
+    2: e('ฟิสิกส์','Physics','เนตรนภา','441'),
+    3: e('ฟิสิกส์','Physics','เนตรนภา','441'),
+    4: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','พีรดา','441'),
+    5: LUNCH(),
+    6: e('ภาษาไทยวรรณกรรม','Thai Literature','กัลยา','441'),
+    7: e('คณิตศาสตร์','Math','วราพร','441'),
+    8: e('ชุมนุม','Club','','แล้วแต่ชุมนุม/Depends on club choice'),
+    9: NONE(),
+  },
+  5: {
+    1: e('คณิตศาสตร์','Math','สราวีวรรณ','441'),
+    2: e('เคมี','Chemistry','สุภารณ์','441'),
+    3: e('กฎหมาย','Law','นัทธชัย','441'),
+    4: e('แนะแนว','Guidance','ธิพัฒน์พิสิษฐ์','441'),
+    5: LUNCH(),
+    6: e('กฤษ','Math','กฤษ','1121'),
+    7: e('ภาษาอังกฤษ','English','วัฒนา','441'),
+    8: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','พีรดา','441'),
+    9: NONE(),
+  },
+};
+
+// ─── ม.5/7  ห้อง 442 ────────────────────────────
+const s57 = {
+  1: {
+    1: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','สุภัค','442'),
+    2: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','สุภัค','442'),
+    3: e('คณิตศาสตร์','Math','สราวีวรรณ','442'),
+    4: e('ภาษาอังกฤษ','English','พัชจิรา','442'),
+    5: LUNCH(),
+    6: e('การงานอาชีพ','Home Economics','จรัญ','442'),
+    7: e('ฟิสิกส์','Physics','เนตรนภา','442'),
+    8: e('ฟิสิกส์','Physics','เนตรนภา','442'),
+    9: NONE(),
+  },
+  2: {
+    1: e('ชีวภาพ','Biology','ภัทรชมน','313'),
+    2: e('ชีวภาพ','Biology','ภัทรชมน','313'),
+    3: e('คณิตศาสตร์','Math','สราวีวรรณ','442'),
+    4: e('คณิตศาสตร์','Math','สราวีวรรณ','442'),
+    5: LUNCH(),
+    6: e('แนะแนว','Guidance','ธิพัฒน์พิสิษฐ์','442'),
+    7: e('ภูมิศาสตร์','Geography','นิษฐาพร','442'),
+    8: e('เคมี','Chemistry','สุภารณ์','442'),
+    9: NONE(),
+  },
+  3: {
+    1: e('ภาษาอังกฤษ','English','วัฒนา','442'),
+    2: e('ประวัติศาสตร์','History','นิตยา','442'),
+    3: e('คณิตศาสตร์','Math','วราพร','442'),
+    4: e('สุขศึกษาและพละศึกษา','PE','กีรติกาญจน์','สนาม'),
+    5: LUNCH(),
+    6: e('เคมี','Chemistry','สุภารณ์','315'),
+    7: e('เคมี','Chemistry','สุภารณ์','315'),
+    8: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','442'),
+    9: NONE(),
+  },
+  4: {
+    1: e('ปกครอง','Homeroom','พบหัวหน้าระดับ/ครูที่ปรึกษา','หอประชุมราชานุเคระห์/442'),
+    2: e('ชีวภาพ','Biology','ภัทรชมน','442'),
+    3: e('ภาษาไทย','Thai','อรพรรณ','442'),
+    4: e('คณิตศาสตร์','Math','วราพร','442'),
+    5: LUNCH(),
+    6: e('คณิตศาสตร์','Math','สราวีวรรณ','442'),
+    7: e('ภาษาอังกฤษ','English','Realyn','442'),
+    8: e('ชุมนุม','Club','','แล้วแต่ชุมนุม/Depends on club choice'),
+    9: NONE(),
+  },
+  5: {
+    1: e('ศิลปะ','Art','กฤษ','1121'),
+    2: e('ภาษาอังกฤษ','English','พัชจิรา','442'),
+    3: e('ฟิสิกส์','Physics','เนตรนภา','326'),
+    4: e('ฟิสิกส์','Physics','เนตรนภา','326'),
+    5: LUNCH(),
+    6: e('ภาษาอังกฤษ','English','วัฒนา','442'),
+    7: e('ภาษาไทย','Thai','อรพรรณ','442'),
+    8: e('ภูมิศาสตร์','Geography','นิษฐาพร','442'),
+    9: NONE(),
+  },
+};
+
+// ─── ม.5/8  ห้อง 443 ────────────────────────────
+const s58 = {
+  1: {
+    1: e('ฟิสิกส์','Physics','เลิศพันธุ์','326'),
+    2: e('ฟิสิกส์','Physics','เลิศพันธุ์','326'),
+    3: e('ภาษาอังกฤษ','English','พัชจิรา','443'),
+    4: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','มลิวัลย์','443'),
+    5: LUNCH(),
+    6: e('ชีวภาพ','Biology','ภัทรชมน','313'),
+    7: e('ชีวภาพ','Biology','ภัทรชมน','313'),
+    8: e('คณิตศาสตร์','Math','นิภาพร','443'),
+    9: NONE(),
+  },
+  2: {
+    1: e('ภาษาไทย','Thai','พิมลรัตน์','443'),
+    2: e('คณิตศาสตร์','Math','นิภาพร','443'),
+    3: e('คณิตศาสตร์','Math','นิภาพร','443'),
+    4: e('ศิลปะ','Art','กฤษ','1121'),
+    5: LUNCH(),
+    6: e('ภูมิศาสตร์','Geography','นิษฐาพร','443'),
+    7: e('เคมี','Chemistry','สุภารณ์','443'),
+    8: e('ภาษาอังกฤษ','English','วัฒนา','443'),
+    9: NONE(),
+  },
+  3: {
+    1: e('เคมี','Chemistry','สุภารณ์','315'),
+    2: e('เคมี','Chemistry','สุภารณ์','315'),
+    3: e('ประวัติศาสตร์','History','นิตยา','443'),
+    4: e('คณิตศาสตร์','Math','สุพิน','443'),
+    5: LUNCH(),
+    6: e('การงานอาชีพ','Home Economics','จรัญ','443'),
+    7: e('ภาษาอังกฤษ','English','พัชจิรา','443'),
+    8: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','443'),
+    9: NONE(),
+  },
+  4: {
+    1: e('ปกครอง','Homeroom','พบหัวหน้าระดับ/ครูที่ปรึกษา','หอประชุมราชานุเคระห์/443'),
+    2: e('คณิตศาสตร์','Math','นิภาพร','443'),
+    3: e('ฟิสิกส์','Physics','เลิศพันธุ์','443'),
+    4: e('ฟิสิกส์','Physics','เลิศพันธุ์','443'),
+    5: LUNCH(),
+    6: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','มลิวัลย์','443'),
+    7: e('ภาษาอังกฤษ','English','Showket','443'),
+    8: e('ชุมนุม','Club','','แล้วแต่ชุมนุม/Depends on club choice'),
+    9: NONE(),
+  },
+  5: {
+    1: e('ภาษาไทย','Thai','พิมลรัตน์','443'),
+    2: e('ภาษาอังกฤษ','English','วัฒนา','443'),
+    3: e('คณิตศาสตร์','Math','สุพิน','443'),
+    4: e('สุขศึกษาและพละศึกษา','PE','กีรติกาญจน์','สนาม'),
+    5: LUNCH(),
+    6: e('แนะแนว','Guidance','ธิพัฒน์พิสิษฐ์','443'),
+    7: e('ภูมิศาสตร์','Geography','นิษฐาพร','443'),
+    8: e('ชีวภาพ','Biology','ภัทรชมน','443'),
+    9: NONE(),
+  },
+};
+
+// ─── ม.5/9  ห้อง 444 ────────────────────────────
+const s59 = {
+  1: {
+    1: e('ประวัติศาสตร์','History','นิตยา','444'),
+    2: e('คณิตศาสตร์','Math','วราพร','444'),
+    3: e('คณิตศาสตร์','Math','วราพร','444'),
+    4: e('ภาษาอังกฤษ','English','วัฒนา','444'),
+    5: LUNCH(),
+    6: e('ฟิสิกส์','Physics','เลิศพันธุ์','444'),
+    7: e('ฟิสิกส์','Physics','เลิศพันธุ์','444'),
+    8: e('ภาษาอังกฤษ','English','พัชจิรา','444'),
+    9: NONE(),
+  },
+  2: {
+    1: e('เคมี','Chemistry','สุภารณ์','315'),
+    2:e('เคมี','Chemistry','สุภารณ์','315'),
+    3: e('ศิลปะ','Art','กฤษ','1121'),
+    4: e('คณิตศาสตร์','Math','วราพร','444'),
+    5: LUNCH(),
+    6: e('กฎหมาย','Law','นัทธชัย','444'),
+    7: e('ภาษาอังกฤษ','English','วัฒนา','444'),
+    8: e('ชีวภาพ','Biology','ภัทรชมน','444'),
+    9: NONE(),
+  },
+  3: {
+    1: e('ฟิสิกส์','Physics','เลิศพันธุ์','326'),
+    2: e('ฟิสิกส์','Physics','เลิศพันธุ์','326'),
+    3: e('แนะแนว','Guidance','ธิพัฒน์พิสิษฐ์','444'),
+    4: e('ภาษาอังกฤษ','English','Realyn','444'),
+    5: LUNCH(),
+    6: e('กฎหมาย','Law','นัทธชัย','444'),
+    7: e('ภาษาไทย','Thai','อรพรรณ','444'),
+    8: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','444'),
+    9: NONE(),
+  },
+  4: {
+    1: e('ปกครอง','Homeroom','พบหัวหน้าระดับ/ครูที่ปรึกษา','หอประชุมราชานุเคระห์/444'),
+    2: e('คณิตศาสตร์','Math','สุพิน','444'),
+    3: e('การงานอาชีพ','Home Economics','จรัญ','444'),
+    4: e('ภาษาไทย','Thai','อรพรรณ','444'),
+    5: LUNCH(),
+    6: e('ชีวภาพ','Biology','ภัทรชมน','444'),
+    7: e('ชีวภาพ','Biology','ภัทรชมน','444'),
+    8: e('ชุมนุม','Club','','แล้วแต่ชุมนุม/Depends on club choice'),
+    9: NONE(),
+  },
+  5: {
+    1: e('เคมี','Chemistry','สุภารณ์','444'),
+    2: e('คณิตศาสตร์','Math','สุพิน','444'),
+    3: e('ชีวภาพ','Biology','ภัทรชมน','313'),
+    4: e('ชีวภาพ','Biology','ภัทรชมน','313'),
+    5: LUNCH(),
+    6: e('ภาษาอังกฤษ','English','พัชจิรา','444'),
+    7: e('ภาษาอังกฤษ','English','พัชจิรา','444'),
+    8: e('สุขศึกษาและพละศึกษา','PE','กีรติกาญจน์','สนาม'),
+    9: NONE(),
+  },
+};
+
+// ─── ม.5/10  ห้อง 824 ───────────────────────────
+const s510 = {
+  1: {
+    1: e('ภาษาอังกฤษ','English','ชเนตตรี','824'),
+    2: e('ภาษาไทยวรรณกรรม','Thai Literature','กัลยา','824'),
+    3: e('บัญชี','Accounting','ลลิตา','824'),
+    4: e('บัญชี','Accounting','ลลิตา','824'),
+    5: LUNCH(),
+    6: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','อาทิตยา','824'),
+    7: e('ประวัติศาสตร์','History','นิตยา','824'),
+    8: e('ภาษาไทย','Thai','นฤมล','824'),
+    9: NONE(),
+  },
+  2: {
+    1: e('คณิตศาสตร์','Math','วราพร','824'),
+    2: e('คณิตศาสตร์','Math','วราพร','824'),
+    3: e('เคมี','Chemistry','ศิริกัญญา','324'),
+    4: e('เคมี','Chemistry','ศิริกัญญา','324'),
+    5: LUNCH(),
+    6: e('ภาษาไทย','Thai','นฤมล','824'),
+    7: e('ภาษาอังกฤษ','English','ธีรนุช','824'),
+    8: e('คณิตศาสตร์','Math','สุพิน','824'),
+    9: NONE(),
+  },
+  3: {
+    1: e('แนะแนว','Guidance','ธิพัฒน์พิสิษฐ์','824'),
+    2: e('ภาษาอังกฤษ','English','เดือนเพ็ญ','824'),
+    3: e('ภาษาอังกฤษ','English','ธีรนุช','824'),
+    4: e('คณิตศาสตร์','Math','วราพร','824'),
+    5: LUNCH(),
+    6: e('ภูมิศาสตร์','Geography','นิษฐาพร','824'),
+    7: e('ศิลปะ','Art','กฤษ','1121'),
+    8: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','824'),
+    9: NONE(),
+  },
+  4: {
+    1: e('ปกครอง','Homeroom','พบหัวหน้าระดับ/ครูที่ปรึกษา','หอประชุมราชานุเคระห์/824'),
+    2: e('คณิตศาสตร์','Math','วราพร','824'),
+    3: e('สุขศึกษาและพละศึกษา','PE','กีรติกาญจน์','สนาม'),
+    4: e('การงานอาชีพ','Home Economics','จรัญ','824'),
+    5: LUNCH(),
+    6: e('เคมี','Chemistry','ศิริกัญญา','824'),
+    7: e('ภาษาอังกฤษ','English','เดือนเพ็ญ','824'),
+    8: e('ชุมนุม','Club','','แล้วแต่ชุมนุม/Depends on club choice'),
+    9: NONE(),
+  },
+  5: {
+    1: e('ภาษาไทยวรรณกรรม','Thai Literature','กัลยา','824'),
+    2: e('ภูมิศาสตร์','Geography','นิษฐาพร','824'),
+    3: e('ภาษาอังกฤษ','English','ชเนตตรี','824'),
+    4: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','445'),
+    5: LUNCH(),
+    6: e('คณิตศาสตร์','Math','สุพิน','824'),
+    7: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','อาทิตยา','824'),
+    8: e('ภาษาอังกฤษ','English','Realyn','824'),
+    9: NONE(),
+  },
+};
+
+// ─── ม.5/11  ห้อง 825 ───────────────────────────
+const s511 = {
+  1: {
+    1: e('ภูมิศาสตร์','Geography','นิษฐาพร','825'),
+    2: e('ภาษาไทย','Thai','พิมลรัตน์','825'),
+    3: e('วิชาเลือก(จีน/ญี่ปุ่น/ฝรั่งเศษ)','Foreign Language Elective','ครูอภิชนาฎ/ครูสุรีวัลย์/ครูรัตนา','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    4: e('วิชาเลือก(จีน/ญี่ปุ่น/ฝรั่งเศษ)','Foreign Language Elective','ครูอภิชนาฎ/ครูสุรีวัลย์/ครูรัตนา','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    5: LUNCH(),
+    6: e('แนะแนว','Guidance','ธิพัฒน์พิสิษฐ์','825'),
+    7: e('ภาษาอังกฤษ','English','เดือนเพ็ญ','825'),
+    8: e('ภาษาอังกฤษ','English','ชเนตตรี','825'),
+    9: NONE(),
+  },
+  2: {
+    1: e('ภาษาไทยวรรณกรรม','Thai Literature','กัลยา','825'),
+    2: e('ภาษาอังกฤษ','English','Realyn','825'),
+    3: e('คณิตศาสตร์','Math','สุพิน','825'),
+    4: e('ภาษาอังกฤษ','English','ชเนตตรี','825'),
+    5: LUNCH(),
+    6: e('ภาษาอังกฤษ','English','ธีรนุช','825'),
+    7: e('เคมี','Chemistry','ศิริกัญญา','825'),
+    8: e('ศิลปะ','Art','กฤษ','1121'),
+    9: NONE(),
+  },
+  3: {
+    1: e('วิชาเลือก(จีน/ญี่ปุ่น/ฝรั่งเศษ)','Foreign Language Elective','ครูอภิชนาฎ/ครูสุรีวัลย์/ครูรัตนา','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    2: e('วิชาเลือก(จีน/ญี่ปุ่น/ฝรั่งเศษ)','Foreign Language Elective','ครูอภิชนาฎ/ครูสุรีวัลย์/ครูรัตนา','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    3: e('ภูมิศาสตร์','Geography','นิษฐาพร','825'),
+    4: e('ภาษาอังกฤษ','English','เดือนเพ็ญ','825'),
+    5: LUNCH(),
+    6: e('กัลยา','Math','กัลยา','825'),
+    7: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','825'),
+    8: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','825'),
+    9: NONE(),
+  },
+  4: {
+    1: e('ปกครอง','Homeroom','พบหัวหน้าระดับ/ครูที่ปรึกษา','หอประชุมราชานุเคระห์/825'),
+    2: e('เคมี','Chemistry','ศิริกัญญา','324'),
+    3: e('เคมี','Chemistry','ศิริกัญญา','324'),
+    4: e('สุขศึกษาและพละศึกษา','PE','กีรติกาญจน์','สนาม'),
+    5: LUNCH(),
+    6: e('คณิตศาสตร์','Math','สุพิน','825'),
+    7: e('ภาษาอังกฤษ','English','ชเนตตรี','825'),
+    8: e('ชุมนุม','Club','','แล้วแต่ชุมนุม/Depends on club choice'),
+    9: NONE(),
+  },
+  5: {
+    1: e('การงานอาชีพ','Home Economics','จรัญ','825'),
+    2: e('ภาษาอังกฤษ','English','ธีรนุช','825'),
+    3: e('ภาษาไทย','Thai','พิมลรัตน์','825'),
+    4: e('ภาษาอังกฤษ','English','ชเนตตรี','825'),
+    5: LUNCH(),
+    6: e('ประวัติศาสตร์','History','นิตยา','825'),
+    7: e('วิชาเลือก(จีน/ญี่ปุ่น/ฝรั่งเศษ)','Foreign Language Elective','T.Cai/T.Sawada/T.Solene','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    8: e('วิชาเลือก(จีน/ญี่ปุ่น/ฝรั่งเศษ)','Foreign Language Elective','T.Cai/T.Sawada/T.Solene','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    9: NONE(),
+      },
+};
+
+// ─── ม.5/12  ห้อง 826 ───────────────────────────
+const s512 = {
+  1: {
+    1: e('กฎหมาย','Law','นัทธชัย','826'),
+    2: e('ภาษาอังกฤษ','English','ธีรนุช','826'),
+    3: e('เคมี','Chemistry','ศิริกัญญา','826'),
+    4: e('เคมี','Chemistry','ศิริกัญญา','826'),
+    5: LUNCH(),
+    6: e('ประวัติศาสตร์','History','นิตยา','826'),
+    7: e('ภาษาอังกฤษ','English','ชเนตตรี','826'),
+    8: e('เคมี','Chemistry','ศิริกัญญา','324'),
+    4: e('สุขศึกษาและพละศึกษา','PE','กีรติกาญจน์','สนาม'),
+    9: NONE(),
+  },
+  2: {
+    1: e('วิชาเลือก(จีน/ญี่ปุ่น)','Foreign Language Elective','ครูอภิชนาฎ/ครูสุรีวัลย์','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    2: e('วิชาเลือก(จีน/ญี่ปุ่น)','Foreign Language Elective','ครูอภิชนาฎ/ครูสุรีวัลย์','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    3: e('ภาษาอังกฤษ','English','เดือนเพ็ญ','826'),
+    4: e('กฎหมาย','Law','นัทธชัย','826'),
+    5: LUNCH(),
+    6: e('ภาษาไทย','Thai','บุณผา','826'),
+    7: e('คณิตศาสตร์','Math','สุพิน','826'),
+    8: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','826'),
+    9: NONE(),
+  },
+  3: {
+    1: e('ภาษาอังกฤษ','English','เดือนเพ็ญ','826'),
+    2: e('แนะแนว','Guidance','ธิพัฒน์พิสิษฐ์','826'),
+    3: e('วิชาเลือก(จีน/ญี่ปุ่น)','Foreign Language Elective','T.Cai/T.Sawada','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    4: e('วิชาเลือก(จีน/ญี่ปุ่น)','Foreign Language Elective','T.Cai/T.Sawada','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    5: LUNCH(),
+    6: e('ภาษาอังกฤษ','English','ชเนตตรี','826'),
+    7: e('ภาษาไทย','Thai','บุณผา','826'),
+    8: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','826'),
+    9: NONE(),
+  },
+  4: {
+    1: e('ปกครอง','Homeroom','พบหัวหน้าระดับ/ครูที่ปรึกษา','หอประชุมราชานุเคระห์/826'),
+    2: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','ฐิติมา','826'),
+    3: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','ฐิติมา','826'),
+    4: e('ภาษาไทย','Thai','กัลยา','826'),
+    5: LUNCH(),
+    6: e('ศิลปะ','Art','กฤษ','1121'),
+    7: e('เคมี','Chemistry','ศิริกัญญา','826'),
+    8: e('ชุมนุม','Club','','แล้วแต่ชุมนุม/Depends on club choice'),
+    9: NONE(),
+  },
+  5: {
+    1: e('ภาษาอังกฤษ','English','ธีรนุช','826'),
+    2: e('ภาษาไทยวรรณกรรม','Thai Literature','826'),
+    3: e('วิชาเลือก(จีน/ญี่ปุ่น)','Foreign Language Elective','ครูอภิชนาฎ/ครูสุรีวัลย์','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    4: e('วิชาเลือก(จีน/ญี่ปุ่น)','Foreign Language Elective','ครูอภิชนาฎ/ครูสุรีวัลย์','แล้วแต่ภาษาที่เลือก/Depending on language choice'),
+    5: LUNCH(),
+    6: e('การงานอาชีพ','Home Economics','จรัญ','826'),
+    7: e('คณิตศาสตร์','Math','สุพิน','826'),
+    8: e('ภาษาอังกฤษ','English','Lenneth','826'),
+    9: NONE(),
+  },
+};
+
+// ─── ม.5/13  ห้อง 815 ───────────────────────────
+const s513 = {
+  1: {
+    1: e('ภาษาไทยวรรณกรรม','Thai Literature','815'),
+    2: e('คณิตศาสตร์','Math','สุพิน','815'),
+    3: e('ภาษาอังกฤษ','English','ธีรนุช','815'),
+    4: e('ภาษาอังกฤษ','English','Janice','815'),
+    5: LUNCH(),
+    6: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','ชุติรัตน์','815'),
+    7: e('แนะแนว','Guidance','ธิพัฒน์พิสิษฐ์','815'),
+    8: e('กฎหมาย','Law','พรพิมล','815'),
+    9: NONE(),
+  },
+  2: {
+    1: e('ภาษาอังกฤษ','English','ชเนตตรี','815'),
+    2: e('ภาษาอังกฤษ','English','เดือนเพ็ญ','815'),
+    3: e('ภาษาไทย','Thai','อรพรรณ','815'),
+    4: e('ภาษาอังกฤษ','English','Janice','815'),
+    5: LUNCH(),
+    6: e('การงานอาชีพ','Home Economics','จรัญ','815'),
+    7: e('ศิลปะ','Art','กฤษ','1121'),
+    8: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','815'),
+    9: NONE(),
+  },
+  3: {
+    1: e('ภาษาอังกฤษ','English','Rangie','815'),
+    2: e('ภาษาไทย','Thai','อรพรรณ','815'),
+    3: e('ภาษาอังกฤษ','English','Realyn','815'),
+    4: e('เคมี','Chemistry','ศิริกัญญา','324'),
+    5: LUNCH(),
+    6: e('ภาษาอังกฤษ','English','ธีรนุช','815'),
+    7: e('ภูมิศาสตร์','Geography','นิษฐาพร','815'),
+    8: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','815'),
+    9: NONE(),
+  },
+  4: {
+    1: e('ปกครอง','Homeroom','พบหัวหน้าระดับ/ครูที่ปรึกษา','หอประชุมราชานุเคระห์/815'),
+    2: e('กฎหมาย','Law','พรพิมล','815'),
+    3: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','ชุติรัตน์','815'),
+    4: e('ภาษาอังกฤษ','English','เดือนเพ็ญ','815'),
+    5: LUNCH(),
+    6: e('สุขศึกษาและพละศึกษา','PE','กีรติกาญจน์','สนาม'),
+    7: e('คณิตศาสตร์','Math','สุพิน','815'),
+    8: e('ชุมนุม','Club','','แล้วแต่ชุมนุม/Depends on club choice'),
+    9: NONE(),
+  },
+  5: {
+    1: e('ภูมิศาสตร์','Geography','นิษฐาพร','815'),
+    2: e('เคมี','Chemistry','ศิริกัญญา','324'),
+    3: e('เคมี','Chemistry','ศิริกัญญา','324'),
+    4: e('ภาษาอังกฤษ','English','Rangie','815'),
+    5: LUNCH(),
+    6: e('ภาษาอังกฤษ','English','ชเนตตรี','815'),
+    7: e('ประวัติศาสตร์','History','นิตยา','815'),
+    8: e('ภาษาไทยวรรณกรรม','Thai Literature','กัลยา','815'),
+    9: NONE(),
+  },
+};
+
+// ─── ม.5/14  ห้อง 816 ───────────────────────────
+const s514 = {
+  1: {
+    1: e('คณิตศาสตร์','Math','สุพิน','816'),
+    2: e('ภาษาอังกฤษ','English','ชเนตตรี','816'),
+    3: e('กฎหมาย','Law','นัทธชัย','816'),
+    4: e('สุขศึกษาและพละศึกษา','PE','กีรติกาญจน์','สนาม'),
+    5: LUNCH(),
+    6: e('ภาษาอังกฤษ','English','วัฒนา','816'),
+    7: e('วิชาเลือก(ดนตรี/ศิลปะ/คหกรรม)', 'Elective','ครูอนุพงค์/ครูกฤษ/ครูวุฒิชัย','แล้วแต่วิชาที่เลือก/Depending Elective choice'),
+    8: e('วิชาเลือก(ดนตรี/ศิลปะ/คหกรรม)', 'Elective','ครูอนุพงค์/ครูกฤษ/ครูวุฒิชัย','แล้วแต่วิชาที่เลือก/Depending Elective choice'),
+    9: NONE(),
+  },
+  2: {
+    1: e('ภาษาไทย','Thai','อรทัย','816'),
+    2: e('ภาษาอังกฤษ','English','วัฒนา','816'),
+    3: e('แนะแนว','Guidance','ธิพัฒน์พิสิษฐ์','816'),
+    4: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','816'),
+    5: LUNCH(),
+    6: e('ภาษาอังกฤษ','English','ชเนตตรี','816'),
+    7: e('ประวัติศาสตร์','History','นิตยา','816'),
+    8: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','พิชญ์สินี','816'),
+    9: NONE(),
+  },
+  3: {
+    1: e('คณิตศาสตร์','Math','สุพิน','816'),
+    2: e('ภาษาอังกฤษ','English','Realyn','816'),
+    3: e('วิชาเลือก(ดนตรี/ศิลปะ/คหกรรม)', 'Elective','ครูอนุพงค์/ครูกฤษ/ครูตะวันฉัตร/วุฒิชัย','แล้วแต่วิชาที่เลือก/Depending Elective choice'),                      
+    4: e('วิชาเลือก(ดนตรี/ศิลปะ/คหกรรม)', 'Elective','ครูอนุพงค์/ครูกฤษ/ครูตะวันฉัตร/วุฒิชัย','แล้วแต่วิชาที่เลือก/Depending Elective choice'), 
+    5: LUNCH(),
+    6: e('ภาษาไทย','Thai','อรทัย','816'),
+    7: e('ภาษาอังกฤษ','English','เดือนเพ็ญ','816'),
+    8: e('ศึกษาค้นคว้าด้วยตัวเอง','Self Study','-','816'),
+    9: NONE(),
+  },
+  4: {
+    1: e('ปกครอง','Homeroom','พบหัวหน้าระดับ/ครูที่ปรึกษา','หอประชุมราชานุเคระห์/815'),
+    2: e('กฎหมาย','Law','นัทธชัย','816'),
+    3: e('ภาษไทยวรรณกรรม','Thai Literature','กัลยา','816'),
+    4: e('ศึกษาค้นคว้าอิสระ','Independent Study (IS)','พิชญ์สินี','816'),
+    5: LUNCH(),
+    6: e('เคมี','Chemistry','สุภารณ์','816'),
+    7: e('ศิลปะ','Art','กฤษ','1121'),
+    8: e('ชุมนุม','Club','','แล้วแต่ชุมนุม/Depends on club choice'),
+    9: NONE(),
+  },
+  5: {
+    1: e('ภาษาอังกฤษ','English','เดือนเพ็ญ','816'),
+    2: e('การงานอาชีพ','Career Guidance','จรัญ','816'),
+    3: e('วิชาเลือก(ดนตรี/ศิลปะ/คหกรรม)', 'Elective','ครูตะวันฉัตร/ครูพิชญ์สินี/ครูกฤษณะ','แล้วแต่วิชาที่เลือก/Depending Elective choice'),
+    4: e('วิชาเลือก(ดนตรี/ศิลปะ/คหกรรม)', 'Elective','ครูตะวันฉัตร/ครูพิชญ์สินี/ครูกฤษณะ','แล้วแต่วิชาที่เลือก/Depending Elective choice'),
+    5: LUNCH(),
+    6: e('ภาษาไทยวรรณกรรม','Thai Literature','กัลยา','816'),
+    7: e('เคมี','Chemistry','สุภารณ์','816'),
+    8: e('เคมี','Chemistry','สุภารณ์','816'),
+    9: NONE(),
+  },
+};
+
+const SCHEDULES = {
+  1: s51, 2: s52, 3: s53, 4: s54, 5: s55,
+  6: s56, 7: s57, 8: s58, 9: s59, 10: s510,
+  11: s511, 12: s512, 13: s513, 14: s514,
+};
+
+const CLASS_ROOMS = {
+  1:'1653', 2:'1654', 3:'331', 4:'332', 5:'433',
+  6:'441', 7:'442', 8:'443', 9:'444', 10:'824',
+  11:'825', 12:'826', 13:'815', 14:'816'
+};
+
+// ══════════════════════════════════════════════════
+//  TIME UTILITIES  (Thailand = UTC+7)
+// ══════════════════════════════════════════════════
+function getThaiTime() {
+  const now = new Date();
+  const thai = new Date(now.getTime() + (7 * 60 - now.getTimezoneOffset()) * 60000);
+  return thai;
+}
+
+function getCurrentPeriod() {
+  const t = getThaiTime();
+  const h = t.getHours(), m = t.getMinutes();
+  const mins = h * 60 + m;
+  const slots = [
+    [8*60+20, 9*60+20, 1],
+    [9*60+20, 10*60+20, 2],
+    [10*60+20, 11*60+20, 3],
+    [11*60+20, 12*60+10, 4],
+    [12*60+10, 13*60, 5],
+    [13*60, 14*60, 6],
+    [14*60, 15*60, 7],
+    [15*60, 16*60, 8],
+    [16*60, 17*60, 9],
+  ];
+  for (const [start, end, p] of slots) {
+    if (mins >= start && mins < end) return p;
+  }
+  return null;
+}
+
+function getPeriodTime(p) {
+  return PERIODS[p - 1] ? `${PERIODS[p-1].start} – ${PERIODS[p-1].end} น.` : '';
+}
+
+function formatThaiTime(d) {
+  const days = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+  const daysEn = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const day = lang === 'th' ? days[d.getDay()] : daysEn[d.getDay()];
+  const hh = String(d.getHours()).padStart(2,'0');
+  const mm = String(d.getMinutes()).padStart(2,'0');
+  const ss = String(d.getSeconds()).padStart(2,'0');
+  return `${day} ${hh}:${mm}:${ss}`;
+}
+
+// live clock
+function updateClock() {
+  const d = getThaiTime();
+  const el = document.getElementById('live-time');
+  if (el) el.textContent = `⏰ ${t('now')}: ${formatThaiTime(d)}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ══════════════════════════════════════════════════
+//  QUERY PARSER
+// ══════════════════════════════════════════════════
+function extractClassNumber(query) {
+  const patterns = [
+    /ม\.?\s*5\s*[./\-]\s*(\d{1,2})/i,
+    /5\s*[./\-]\s*(\d{1,2})/,
+    /ห้อง\s*5(\d{1,2})/,
+    /m\.?5\s*[./\-]\s*(\d{1,2})/i,
+    /class\s*5[./\-]?(\d{1,2})/i,
+    /grade\s*11[./\-\s]*(\d{1,2})/i,
+  ];
+  for (const p of patterns) {
+    const m = query.match(p);
+    if (m) {
+      const n = parseInt(m[1]);
+      if (n >= 1 && n <= 14) return n;
+    }
+  }
+  return null;
+}
+
+// Extract a day of week from the query (returns 1-5 for Mon-Fri, or null)
+function extractDay(query) {
+  const q = query.toLowerCase();
+  const dayMap = [
+    { keys: ['จันทร์','monday','mon','วันจันทร์'], val: 1 },
+    { keys: ['อังคาร','tuesday','tue','วันอังคาร'], val: 2 },
+    { keys: ['พุธ','wednesday','wed','วันพุธ'], val: 3 },
+    { keys: ['พฤหัส','thursday','thu','วันพฤหัส'], val: 4 },
+    { keys: ['ศุกร์','friday','fri','วันศุกร์'], val: 5 },
+  ];
+  for (const d of dayMap) {
+    if (d.keys.some(k => q.includes(k))) return d.val;
+  }
+  return null;
+}
+
+// Extract a specific period number from the query (returns 1-9 or null)
+function extractPeriod(query) {
+  const q = query.toLowerCase();
+  // Thai ordinal words
+  const wordMap = [
+    { keys: ['แรก','ที่หนึ่ง','หนึ่ง','first','1st','one'], val: 1 },
+    { keys: ['ที่สอง','สอง','second','2nd','two'], val: 2 },
+    { keys: ['ที่สาม','สาม','third','3rd','three'], val: 3 },
+    { keys: ['ที่สี่','สี่','fourth','4th','four'], val: 4 },
+    { keys: ['ที่ห้า','ห้า','fifth','5th','five'], val: 5 },
+    { keys: ['ที่หก','หก','sixth','6th','six'], val: 6 },
+    { keys: ['ที่เจ็ด','เจ็ด','seventh','7th','seven'], val: 7 },
+    { keys: ['ที่แปด','แปด','eighth','8th','eight'], val: 8 },
+    { keys: ['ที่เก้า','เก้า','ninth','9th','nine'], val: 9 },
+  ];
+  // First try explicit "คาบที่ N" or "period N"
+  const numMatch = q.match(/(?:คาบ(?:ที่)?\s*|period\s*)(\d)/);
+  if (numMatch) return parseInt(numMatch[1]);
+  // Then try word-based, but only when "คาบ" or "period" is also present
+  if (q.includes('คาบ') || q.includes('period')) {
+    for (const w of wordMap) {
+      if (w.keys.some(k => q.includes(k))) return w.val;
+    }
+  }
+  return null;
+}
+
+function isAskingAllDay(q) {
+  const kw = ['ทั้งวัน','ตลอดวัน','all day','full schedule','ตารางวันนี้','schedule today','มีอะไรบ้าง','ทุกคาบ','all period'];
+  return kw.some(k => q.toLowerCase().includes(k));
+}
+
+// ══════════════════════════════════════════════════
+//  RESPONSE BUILDER
+// ══════════════════════════════════════════════════
+function buildScheduleCard(classNum, dayNum, periodNum, contextLabel) {
+  const schedule = SCHEDULES[classNum];
+  const roomNo = CLASS_ROOMS[classNum];
+  const daySchedule = schedule[dayNum];
+  if (!daySchedule) return { text: `ไม่พบข้อมูลสำหรับวันนี้` };
+
+  const cl = daySchedule[periodNum];
+  const dayLabelTH = ['','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์'][dayNum] || '';
+  const dayLabelEN = ['','Monday','Tuesday','Wednesday','Thursday','Friday'][dayNum] || '';
+  const dayLabel = lang === 'th' ? dayLabelTH : dayLabelEN;
+
+  if (!cl) {
+    return { text: lang === 'th'
+      ? `ม.5/${classNum} ไม่มีคาบเรียนในวัน${dayLabel} คาบที่ ${periodNum}`
+      : `M.5/${classNum} has no class on ${dayLabel} Period ${periodNum}.`
+    };
+  }
+
+  if (periodNum === 5) {
+    return { text: lang === 'th'
+      ? `⏰ วัน${dayLabel} คาบที่ 5 เป็นเวลาพักกลางวัน (12:10 – 13:00 น.)`
+      : `⏰ ${dayLabel} Period 5 is lunch break (12:10 – 13:00).`
+    };
+  }
+
+  const subj = lang === 'th' ? cl.subjectTH : cl.subjectEN;
+  const intro = lang === 'th'
+    ? `ม.5/${classNum} วัน${dayLabel} ${contextLabel}:`
+    : `M.5/${classNum} on ${dayLabel} ${contextLabel}:`;
+
+  return {
+    html: `<div>${intro}</div>
+    <div class="result-card">
+      <span class="period-badge">${t('period')} ${periodNum} · ${getPeriodTime(periodNum)}</span>
+      <div class="subject">${subj}</div>
+      ${cl.teacher ? `<div class="detail">${t('teacher')}: <span>${cl.teacher}</span></div>` : ''}
+      <div class="detail">${t('room')}: <span>${cl.room || roomNo}</span></div>
+      <div class="detail">${t('time')}: <span>${getPeriodTime(periodNum)}</span></div>
+    </div>`
+  };
+}
+
+function buildAllDayCard(classNum, dayNum) {
+  const schedule = SCHEDULES[classNum];
+  const daySchedule = schedule[dayNum];
+  const dayLabelTH = ['','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์'][dayNum] || '';
+  const dayLabelEN = ['','Monday','Tuesday','Wednesday','Thursday','Friday'][dayNum] || '';
+  const dayLabel = lang === 'th' ? dayLabelTH : dayLabelEN;
+  const title = lang === 'th'
+    ? `ตารางเรียนวัน${dayLabel} ม.5/${classNum}`
+    : `Schedule for ${dayLabel} – M.5/${classNum}`;
+
+  let html = `<div style="margin-top:4px"><b>${title}</b></div>`;
+  let hasAny = false;
+  for (let p = 1; p <= 9; p++) {
+    const cl = daySchedule[p];
+    if (!cl) continue;
+    hasAny = true;
+    const subj = lang === 'th' ? cl.subjectTH : cl.subjectEN;
+    html += `<div class="result-card" style="margin-top:8px">
+      <span class="period-badge">${t('period')} ${p} · ${getPeriodTime(p)}</span>
+      <div class="subject">${subj}</div>
+      ${cl.teacher ? `<div class="detail">${t('teacher')}: <span>${cl.teacher}</span></div>` : ''}
+      ${cl.room ? `<div class="detail">${t('room')}: <span>${cl.room}</span></div>` : ''}
+    </div>`;
+  }
+  if (!hasAny) html += `<div style="margin-top:8px;opacity:0.6">${lang==='th'?'ไม่มีข้อมูลคาบเรียน':'No class data found.'}</div>`;
+  return { html };
+}
+
+function buildResponse(query) {
+  const classNum = extractClassNumber(query);
+  const thai = getThaiTime();
+  const todayDow = thai.getDay(); // 0=Sun
+  const currentPeriod = getCurrentPeriod();
+
+  // ── Just asking what period it is now ──
+  if (!classNum && (query.includes('คาบ') || query.toLowerCase().includes('period')) && !extractDay(query)) {
+    if (!currentPeriod) return { text: t('noClass') };
+    return {
+      text: lang === 'th'
+        ? `⏰ ขณะนี้เป็น **คาบที่ ${currentPeriod}** (${getPeriodTime(currentPeriod)})`
+        : `⏰ It is currently **Period ${currentPeriod}** (${getPeriodTime(currentPeriod)})`
+    };
+  }
+
+  if (!classNum) return { text: t('notFound') };
+
+  const schedule = SCHEDULES[classNum];
+  const roomNo = CLASS_ROOMS[classNum];
+
+  // ── Extract advance day & period from query ──
+  const askedDay    = extractDay(query);    // null = not specified → use today
+  const askedPeriod = extractPeriod(query); // null = not specified → use current
+
+  // Resolve which day we're looking at
+  const targetDay = askedDay !== null ? askedDay : todayDow;
+
+  // Weekend check (only relevant for "today" queries)
+  if (askedDay === null && (todayDow === 0 || todayDow === 6)) {
+    return { text: lang === 'th'
+      ? `📅 วันนี้เป็นวันหยุดสุดสัปดาห์ ไม่มีการเรียนการสอนสำหรับ ม.5/${classNum}`
+      : `📅 Today is a weekend. No classes for M.5/${classNum}.`
+    };
+  }
+
+  // If asking for a full day schedule
+  if (isAskingAllDay(query)) {
+    return buildAllDayCard(classNum, targetDay);
+  }
+
+  // ── Advance query: specific day + specific period ──
+  if (askedDay !== null && askedPeriod !== null) {
+    const dayLabelTH = ['','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์'][askedDay];
+    const contextLabel = lang === 'th' ? `คาบที่ ${askedPeriod}` : `Period ${askedPeriod}`;
+    return buildScheduleCard(classNum, askedDay, askedPeriod, contextLabel);
+  }
+
+  // ── Advance query: specific day, no period → show full day ──
+  if (askedDay !== null && askedPeriod === null) {
+    return buildAllDayCard(classNum, askedDay);
+  }
+
+  // ── Advance query: specific period, today ──
+  if (askedDay === null && askedPeriod !== null) {
+    const contextLabel = lang === 'th' ? `คาบที่ ${askedPeriod}` : `Period ${askedPeriod}`;
+    return buildScheduleCard(classNum, targetDay, askedPeriod, contextLabel);
+  }
+
+  // ── Default: current time ──
+  if (!currentPeriod) {
+    return {
+      text: lang === 'th'
+        ? `🌙 ขณะนี้อยู่นอกเวลาเรียน ไม่มีคาบเรียนสำหรับ ม.5/${classNum}`
+        : `🌙 School is not currently in session. No active class for M.5/${classNum}.`
+    };
+  }
+
+  const contextNow = lang === 'th' ? 'กำลังเรียน' : 'is currently in';
+  return buildScheduleCard(classNum, todayDow, currentPeriod, contextNow);
+}
+
+// ══════════════════════════════════════════════════
+//  CHAT UI
+// ══════════════════════════════════════════════════
+const chatBox = document.getElementById('chat-box');
+
+function addMsg(role, content, isHtml = false) {
+  const wrap = document.createElement('div');
+  wrap.className = `msg ${role}`;
+
+  const av = document.createElement('div');
+  av.className = `avatar ${role === 'ai' ? 'ai-avatar' : 'user-avatar'}`;
+  av.textContent = role === 'ai' ? '🤖' : '👤';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+
+  if (isHtml) {
+    bubble.innerHTML = content;
+  } else {
+    // bold support via **
+    bubble.innerHTML = content
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>');
+  }
+
+  wrap.appendChild(av);
+  wrap.appendChild(bubble);
+  chatBox.appendChild(wrap);
+  chatBox.scrollTop = chatBox.scrollHeight;
+  return wrap;
+}
+
+function addTyping() {
+  const wrap = document.createElement('div');
+  wrap.className = 'msg ai';
+  wrap.id = 'typing-indicator';
+  wrap.innerHTML = `
+    <div class="avatar ai-avatar">🤖</div>
+    <div class="bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+  `;
+  chatBox.appendChild(wrap);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function removeTyping() {
+  const el = document.getElementById('typing-indicator');
+  if (el) el.remove();
+}
+
+// Welcome message
+function showWelcome() {
+  const suggs = t('suggests');
+  const suggHTML = `<div class="suggestions">${suggs.map(s => `<button class="suggest-btn" onclick="sendQuery('${s}')">${s}</button>`).join('')}</div>`;
+  const welcomeText = t('welcome').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+  addMsg('ai', `<div>${welcomeText}</div>${suggHTML}`, true);
+}
+
+function handleSend() {
+  const inp = document.getElementById('user-input');
+  const query = inp.value.trim();
+  if (!query) return;
+  inp.value = '';
+  sendQuery(query);
+}
+
+function sendQuery(query) {
+  addMsg('user', query);
+  addTyping();
+
+  setTimeout(() => {
+    removeTyping();
+    const res = buildResponse(query);
+    if (res.html) {
+      addMsg('ai', res.html, true);
+    } else {
+      addMsg('ai', res.text);
+    }
+  }, 600);
+}
+
+// Enter key
+document.getElementById('user-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    handleSend();
+  }
+});
+
+// ══════════════════════════════════════════════════
+//  LANGUAGE SWITCHER
+// ══════════════════════════════════════════════════
+function setLang(l) {
+  lang = l;
+  document.getElementById('btn-th').className = l === 'th' ? 'active' : '';
+  document.getElementById('btn-en').className = l === 'en' ? 'active' : '';
+  document.getElementById('hdr-title').textContent = t('hdrTitle');
+  document.getElementById('hdr-sub').textContent = t('hdrSub');
+  document.getElementById('user-input').placeholder = t('placeholder');
+  document.getElementById('hint-text').textContent = t('hint');
+  document.documentElement.lang = l;
+  // Clear and re-show welcome
+  chatBox.innerHTML = '';
+  showWelcome();
+}
+
+// Init
+showWelcome();
+</script>
+</body>
+</html>
